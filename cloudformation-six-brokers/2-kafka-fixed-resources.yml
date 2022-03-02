@@ -23,7 +23,7 @@ Conditions:
     Fn::Equals:
       - Ref: Kafka6Create
       - 'True'
-Description: Kafka Resources - Kafka Operations and Monitoring Course - (c) Stephane
+Description: Kafka Resources - Based on script by Stephane
   Maarek, DataCumulus.
 Metadata:
   AWS::CloudFormation::Interface:

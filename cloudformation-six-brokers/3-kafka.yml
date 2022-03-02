@@ -27,7 +27,7 @@ Conditions:
     Fn::Equals:
       - Ref: SetupMonitoringParam
       - 'True'
-Description: Kafka Compute - Kafka Operations and Monitoring Course - (c) Stephane
+Description: Kafka Compute - Based on script by Stephane
   Maarek, DataCumulus.
 Mappings:
   RegionMap:
@@ -213,18 +213,21 @@ Resources:
                   - |
                     ############################# Server Basics #############################
                     broker.id=1
+                    broker.rack=1-dc1
                     advertised.listeners=PLAINTEXT://${broker_ip}:9092
                     delete.topic.enable=true
                     log.dirs=/data/kafka
-                    num.partitions=8
-                    default.replication.factor=3
+                    num.partitions=3
+                    min.insync.replicas=3
+                    default.replication.factor=6
+                    replica.selector.class=org.apache.kafka.common.replica.RackAwareReplicaSelector
                     log.retention.hours=168
 
-                    zookeeper.connect=${zookeeper1_ip}:2181,${zookeeper2_ip}:2181,${zookeeper3_ip}:2181
+                    zookeeper.connect=${zookeeper1_ip}:2181,${zookeeper2_ip}:2181,${zookeeper3_ip}:2181,${zookeeper4_ip}:2181
                     zookeeper.connection.timeout.ms=6000
 
                     auto.create.topics.enable=false
-                    offsets.topic.replication.factor=3
+                    offsets.topic.replication.factor=6
                   - broker_ip:
                       Fn::ImportValue: Kafka1IP
                     zookeeper1_ip:
@@ -233,6 +236,8 @@ Resources:
                       Fn::ImportValue: Zookeeper2IP
                     zookeeper3_ip:
                       Fn::ImportValue: Zookeeper3IP
+                    zookeeper4_ip:
+                      Fn::ImportValue: Zookeeper4IP
               group: ec2-user
               mode: '000644'
               owner: ec2-user
@@ -449,18 +454,21 @@ Resources:
                   - |
                     ############################# Server Basics #############################
                     broker.id=2
+                    broker.rack=2-dc1
                     advertised.listeners=PLAINTEXT://${broker_ip}:9092
                     delete.topic.enable=true
                     log.dirs=/data/kafka
-                    num.partitions=8
-                    default.replication.factor=3
+                    num.partitions=3
+                    min.insync.replicas=3
+                    default.replication.factor=6
+                    replica.selector.class=org.apache.kafka.common.replica.RackAwareReplicaSelector
                     log.retention.hours=168
 
-                    zookeeper.connect=${zookeeper1_ip}:2181,${zookeeper2_ip}:2181,${zookeeper3_ip}:2181
+                    zookeeper.connect=${zookeeper1_ip}:2181,${zookeeper2_ip}:2181,${zookeeper3_ip}:2181,${zookeeper4_ip}:2181
                     zookeeper.connection.timeout.ms=6000
 
                     auto.create.topics.enable=false
-                    offsets.topic.replication.factor=3
+                    offsets.topic.replication.factor=6
                   - broker_ip:
                       Fn::ImportValue: Kafka2IP
                     zookeeper1_ip:
@@ -685,18 +693,21 @@ Resources:
                   - |
                     ############################# Server Basics #############################
                     broker.id=3
+                    broker.rack=3-dc2
                     advertised.listeners=PLAINTEXT://${broker_ip}:9092
                     delete.topic.enable=true
                     log.dirs=/data/kafka
-                    num.partitions=8
-                    default.replication.factor=3
+                    num.partitions=3
+                    min.insync.replicas=3
+                    default.replication.factor=6
+                    replica.selector.class=org.apache.kafka.common.replica.RackAwareReplicaSelector
                     log.retention.hours=168
 
-                    zookeeper.connect=${zookeeper1_ip}:2181,${zookeeper2_ip}:2181,${zookeeper3_ip}:2181
+                    zookeeper.connect=${zookeeper1_ip}:2181,${zookeeper2_ip}:2181,${zookeeper3_ip}:2181,${zookeeper4_ip}:2181
                     zookeeper.connection.timeout.ms=6000
 
                     auto.create.topics.enable=false
-                    offsets.topic.replication.factor=3
+                    offsets.topic.replication.factor=6
                   - broker_ip:
                       Fn::ImportValue: Kafka3IP
                     zookeeper1_ip:
@@ -921,18 +932,21 @@ Resources:
                   - |
                     ############################# Server Basics #############################
                     broker.id=4
+                    broker.rack=4-dc2
                     advertised.listeners=PLAINTEXT://${broker_ip}:9092
                     delete.topic.enable=true
                     log.dirs=/data/kafka
-                    num.partitions=8
-                    default.replication.factor=3
+                    num.partitions=3
+                    min.insync.replicas=3
+                    default.replication.factor=6
+                    replica.selector.class=org.apache.kafka.common.replica.RackAwareReplicaSelector
                     log.retention.hours=168
 
-                    zookeeper.connect=${zookeeper1_ip}:2181,${zookeeper2_ip}:2181,${zookeeper3_ip}:2181
+                    zookeeper.connect=${zookeeper1_ip}:2181,${zookeeper2_ip}:2181,${zookeeper3_ip}:2181,${zookeeper4_ip}:2181
                     zookeeper.connection.timeout.ms=6000
 
                     auto.create.topics.enable=false
-                    offsets.topic.replication.factor=3
+                    offsets.topic.replication.factor=6
                   - broker_ip:
                       Fn::ImportValue: Kafka4IP
                     zookeeper1_ip:
@@ -1156,19 +1170,22 @@ Resources:
                 Fn::Sub:
                   - |
                     ############################# Server Basics #############################
-                    broker.id=4
+                    broker.id=5
+                    broker.rack=5-dc1
                     advertised.listeners=PLAINTEXT://${broker_ip}:9092
                     delete.topic.enable=true
                     log.dirs=/data/kafka
-                    num.partitions=8
-                    default.replication.factor=3
+                    num.partitions=3
+                    min.insync.replicas=3
+                    default.replication.factor=6
+                    replica.selector.class=org.apache.kafka.common.replica.RackAwareReplicaSelector
                     log.retention.hours=168
 
-                    zookeeper.connect=${zookeeper1_ip}:2181,${zookeeper2_ip}:2181,${zookeeper3_ip}:2181
+                    zookeeper.connect=${zookeeper1_ip}:2181,${zookeeper2_ip}:2181,${zookeeper3_ip}:2181,${zookeeper4_ip}:2181
                     zookeeper.connection.timeout.ms=6000
 
                     auto.create.topics.enable=false
-                    offsets.topic.replication.factor=3
+                    offsets.topic.replication.factor=6
                   - broker_ip:
                       Fn::ImportValue: Kafka5IP
                     zookeeper1_ip:
@@ -1392,19 +1409,22 @@ Resources:
                 Fn::Sub:
                   - |
                     ############################# Server Basics #############################
-                    broker.id=4
+                    broker.id=6
+                    broker.rack=6-dc2
                     advertised.listeners=PLAINTEXT://${broker_ip}:9092
                     delete.topic.enable=true
                     log.dirs=/data/kafka
-                    num.partitions=8
-                    default.replication.factor=3
+                    num.partitions=3
+                    min.insync.replicas=3
+                    default.replication.factor=6
+                    replica.selector.class=org.apache.kafka.common.replica.RackAwareReplicaSelector
                     log.retention.hours=168
 
-                    zookeeper.connect=${zookeeper1_ip}:2181,${zookeeper2_ip}:2181,${zookeeper3_ip}:2181
+                    zookeeper.connect=${zookeeper1_ip}:2181,${zookeeper2_ip}:2181,${zookeeper3_ip}:2181,${zookeeper4_ip}:2181
                     zookeeper.connection.timeout.ms=6000
 
                     auto.create.topics.enable=false
-                    offsets.topic.replication.factor=3
+                    offsets.topic.replication.factor=6
                   - broker_ip:
                       Fn::ImportValue: Kafka6IP
                     zookeeper1_ip:

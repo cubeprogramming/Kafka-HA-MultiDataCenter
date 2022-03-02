@@ -1,4 +1,4 @@
-Description: ZooKeeper Resources, Kafka Operations and Monitoring Course - (c) Stephane
+Description: ZooKeeper Resources, Based on script by Stephane
   Maarek, DataCumulus.
 Metadata:
   AWS::CloudFormation::Interface:

@@ -1,4 +1,4 @@
-Description: ZooKeeper Compute - Kafka Operations and Monitoring Course - (c) Stephane
+Description: ZooKeeper Compute - Based on script by Stephane
   Maarek, DataCumulus.
 Mappings:
   RegionMap:
@@ -79,6 +79,14 @@ Resources:
         Ref: Zookeeper3EC2
       VolumeId:
         Fn::ImportValue: Zookeeper3EBS
+  Zookeeper4EC2VolumeAttachment:
+    Type: AWS::EC2::VolumeAttachment
+    Properties:
+      Device: /dev/sdf
+      InstanceId:
+        Ref: Zookeeper4EC2
+      VolumeId:
+        Fn::ImportValue: Zookeeper4EBS
   Zookeeper1EC2:
     Metadata:
       AWS::CloudFormation::Init:
@@ -134,12 +142,15 @@ Resources:
                     server.1=${zk1_ip}:2888:3888
                     server.2=${zk2_ip}:2888:3888
                     server.3=${zk3_ip}:2888:3888
+                    server.4=${zk4_ip}:2888:3888:observer
                   - zk1_ip:
                       Fn::ImportValue: Zookeeper1IP
                     zk2_ip:
                       Fn::ImportValue: Zookeeper2IP
                     zk3_ip:
                       Fn::ImportValue: Zookeeper3IP
+                    zk4_ip:
+                      Fn::ImportValue: Zookeeper4IP
               group: ec2-user
               mode: '000644'
               owner: ec2-user
@@ -223,7 +234,6 @@ Resources:
               wget: {}
               xfsprogs: {}
               zip: {}
-              nc: {}
     Properties:
       ImageId:
         Fn::FindInMap:
@@ -309,12 +319,15 @@ Resources:
                     server.1=${zk1_ip}:2888:3888
                     server.2=${zk2_ip}:2888:3888
                     server.3=${zk3_ip}:2888:3888
+                    server.4=${zk4_ip}:2888:3888:observer
                   - zk1_ip:
                       Fn::ImportValue: Zookeeper1IP
                     zk2_ip:
                       Fn::ImportValue: Zookeeper2IP
                     zk3_ip:
                       Fn::ImportValue: Zookeeper3IP
+                    zk4_ip:
+                      Fn::ImportValue: Zookeeper4IP
               group: ec2-user
               mode: '000644'
               owner: ec2-user
@@ -398,7 +411,6 @@ Resources:
               wget: {}
               xfsprogs: {}
               zip: {}
-              nc: {}
     Properties:
       ImageId:
         Fn::FindInMap:
@@ -484,12 +496,15 @@ Resources:
                     server.1=${zk1_ip}:2888:3888
                     server.2=${zk2_ip}:2888:3888
                     server.3=${zk3_ip}:2888:3888
+                    server.4=${zk4_ip}:2888:3888:observer
                   - zk1_ip:
                       Fn::ImportValue: Zookeeper1IP
                     zk2_ip:
                       Fn::ImportValue: Zookeeper2IP
                     zk3_ip:
                       Fn::ImportValue: Zookeeper3IP
+                    zk4_ip:
+                      Fn::ImportValue: Zookeeper4IP
               group: ec2-user
               mode: '000644'
               owner: ec2-user
@@ -573,7 +588,6 @@ Resources:
               wget: {}
               xfsprogs: {}
               zip: {}
-              nc: {}
     Properties:
       ImageId:
         Fn::FindInMap:
@@ -600,6 +614,184 @@ Resources:
             /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource Zookeeper3EC2Wait --region ${AWS::Region}
     Type: AWS::EC2::Instance
   Zookeeper3EC2Wait:
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT5M
+    Type: AWS::CloudFormation::WaitCondition
+  Zookeeper4EC2:
+    Metadata:
+      AWS::CloudFormation::Init:
+        config:
+          commands:
+            0_attach_format_ebs:
+              command: /usr/local/bin/attach_format_ebs
+              ignoreErrors: 'false'
+            1_set_swappiness:
+              command: /usr/local/bin/set_swappiness
+              ignoreErrors: 'false'
+            2_download_extract_kafka:
+              command: /usr/local/bin/setup_kafka_bin
+              ignoreErrors: 'false'
+            3_start_zookeeper_service:
+              command: /usr/local/bin/start_zookeeper
+              ignoreErrors: 'false'
+            4_tweak_bash_profile:
+              command: /usr/local/bin/add_to_bash_profile
+              ignoreErrors: 'false'
+          files:
+            /etc/systemd/system/zookeeper.service:
+              content: |
+                [Unit]
+                Description=Zookeeper
+                After=network.target
+
+                [Service]
+                User=ec2-user
+                Group=ec2-user
+                SyslogIdentifier=zookeeper
+                ExecStart=/home/ec2-user/kafka/bin/zookeeper-server-start.sh /home/ec2-user/zookeeper.properties
+                SuccessExitStatus=143
+
+                [Install]
+                WantedBy=multi-user.target
+              group: root
+              mode: '000755'
+              owner: root
+            /home/ec2-user/zookeeper.properties:
+              content:
+                Fn::Sub:
+                  - |
+                    # zookeeper.properties
+                    dataDir=/data/zookeeper
+                    # the port at which the clients will connect
+                    clientPort=2181
+                    # disable the per-ip limit on the number of connections since this is a non-production config
+                    maxClientCnxns=0
+                    initLimit=30
+                    syncLimit=4
+                    # Use provided DNS
+                    server.1=${zk1_ip}:2888:3888
+                    server.2=${zk2_ip}:2888:3888
+                    server.3=${zk3_ip}:2888:3888
+                    server.4=${zk4_ip}:2888:3888:observer
+                    peerType=}:2888:3888:observer
+                  - zk1_ip:
+                      Fn::ImportValue: Zookeeper1IP
+                    zk2_ip:
+                      Fn::ImportValue: Zookeeper2IP
+                    zk3_ip:
+                      Fn::ImportValue: Zookeeper3IP
+                    zk4_ip:
+                      Fn::ImportValue: Zookeeper4IP
+              group: ec2-user
+              mode: '000644'
+              owner: ec2-user
+            /data/zookeeper/myid:
+              content: |
+                    4
+              group: ec2-user
+              mode: '000644'
+              owner: ec2-user
+            /usr/local/bin/add_to_bash_profile:
+              content: |
+                #!/bin/bash -xe
+                cat << "EOF" >> /home/ec2-user/.bash_profile
+                DAEMON_PATH=/home/ec2-user/kafka/bin
+                export PATH=$PATH:$DAEMON_PATH
+                export KAFKA_HEAP_OPTS="-Xmx256M -Xms128M"
+                EOF
+              group: root
+              mode: '000755'
+              owner: root
+            /usr/local/bin/attach_format_ebs:
+              content: |
+                #!/bin/bash -xe
+
+                #
+                # See: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html
+                #
+                # Make sure both volumes have been created AND attached to this instance !
+
+                ######################################################################
+
+                while [ ! -e /dev/xvdf ] ; do echo "Waiting for attachment"; sleep 1 ; done
+
+                # Format /dev/xvdf if it does not contain a partition yet
+                if [ "$(file -b -s /dev/xvdf)" == "data" ]; then
+                  mkfs.xfs -f /dev/xvdf
+                fi
+
+                mkdir -p /data/zookeeper
+                mount -t xfs /dev/xvdf /data/zookeeper
+                chown -R ec2-user:ec2-user /data/zookeeper
+
+                # Persist the volume in /etc/fstab so it gets mounted again
+                echo '/dev/xvdf /data/zookeeper xfs defaults 0 0' >> /etc/fstab
+              group: root
+              mode: '000755'
+              owner: root
+            /usr/local/bin/set_swappiness:
+              content: |
+                #!/bin/bash -xe
+                sysctl vm.swappiness=1
+                echo 'vm.swappiness=1' | sudo tee --append /etc/sysctl.conf
+              group: root
+              mode: '000755'
+              owner: root
+            /usr/local/bin/setup_kafka_bin:
+              content: |
+                #!/bin/bash -xe
+                wget -P /home/ec2-user https://archive.apache.org/dist/kafka/1.1.1/kafka_2.12-1.1.1.tgz
+                tar xf /home/ec2-user/kafka_2.12-1.1.1.tgz -C /home/ec2-user
+                ln -s /home/ec2-user/kafka_2.12-1.1.1 /home/ec2-user/kafka
+                chown -R ec2-user:ec2-user /home/ec2-user/kafka /home/ec2-user/kafka_2.12-1.1.1
+                rm /home/ec2-user/kafka_2.12-1.1.1.tgz
+              group: root
+              mode: '000755'
+              owner: root
+            /usr/local/bin/start_zookeeper:
+              content: |
+                #!/bin/bash -xe
+                systemctl enable zookeeper.service
+                systemctl start zookeeper.service
+              group: root
+              mode: '000755'
+              owner: root
+          packages:
+            yum:
+              ca-certificates: {}
+              java-1.8.0-openjdk: {}
+              net-tools: {}
+              tar: {}
+              wget: {}
+              xfsprogs: {}
+              zip: {}
+    Properties:
+      ImageId:
+        Fn::FindInMap:
+          - RegionMap
+          - Ref: AWS::Region
+          - AMI
+      InstanceType:
+        Ref: InstanceType
+      KeyName:
+        Ref: KeyName
+      NetworkInterfaces:
+        - DeviceIndex: 0
+          NetworkInterfaceId:
+            Fn::ImportValue: Zookeeper4ENI
+      Tags:
+        - Key: Name
+          Value: Zookeeper 4
+      UserData:
+        Fn::Base64:
+          Fn::Sub: |
+            #!/bin/bash -xe
+            yum update -y aws-cfn-bootstrap
+            /opt/aws/bin/cfn-init -s ${AWS::StackId} -r Zookeeper4EC2 --region ${AWS::Region}
+            /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource Zookeeper4EC2Wait --region ${AWS::Region}
+    Type: AWS::EC2::Instance
+  Zookeeper4EC2Wait:
     CreationPolicy:
       ResourceSignal:
         Timeout: PT5M
