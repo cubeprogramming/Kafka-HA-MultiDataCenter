@@ -138,6 +138,7 @@ Resources:
                     maxClientCnxns=0
                     initLimit=30
                     syncLimit=4
+                    4lw.commands.whitelist=*
                     # Use provided DNS
                     server.1=${zk1_ip}:2888:3888
                     server.2=${zk2_ip}:2888:3888
@@ -151,12 +152,6 @@ Resources:
                       Fn::ImportValue: Zookeeper3IP
                     zk4_ip:
                       Fn::ImportValue: Zookeeper4IP
-              group: ec2-user
-              mode: '000644'
-              owner: ec2-user
-            /data/zookeeper/myid:
-              content: |
-                    1
               group: ec2-user
               mode: '000644'
               owner: ec2-user
@@ -195,6 +190,11 @@ Resources:
 
                 # Persist the volume in /etc/fstab so it gets mounted again
                 echo '/dev/xvdf /data/zookeeper xfs defaults 0 0' >> /etc/fstab
+
+                # Create ID file for ZooKeeper
+                echo '1' > /data/zookeeper/myid
+                chmod 0644 /data/zookeeper/myid
+                chown ec2-user:ec2-user /data/zookeeper/myid
               group: root
               mode: '000755'
               owner: root
@@ -315,6 +315,7 @@ Resources:
                     maxClientCnxns=0
                     initLimit=30
                     syncLimit=4
+                    4lw.commands.whitelist=*
                     # Use provided DNS
                     server.1=${zk1_ip}:2888:3888
                     server.2=${zk2_ip}:2888:3888
@@ -328,12 +329,6 @@ Resources:
                       Fn::ImportValue: Zookeeper3IP
                     zk4_ip:
                       Fn::ImportValue: Zookeeper4IP
-              group: ec2-user
-              mode: '000644'
-              owner: ec2-user
-            /data/zookeeper/myid:
-              content: |
-                    2
               group: ec2-user
               mode: '000644'
               owner: ec2-user
@@ -372,6 +367,11 @@ Resources:
 
                 # Persist the volume in /etc/fstab so it gets mounted again
                 echo '/dev/xvdf /data/zookeeper xfs defaults 0 0' >> /etc/fstab
+
+                # Create ID file for ZooKeeper
+                echo '2' > /data/zookeeper/myid
+                chmod 0644 /data/zookeeper/myid
+                chown ec2-user:ec2-user /data/zookeeper/myid
               group: root
               mode: '000755'
               owner: root
@@ -492,6 +492,7 @@ Resources:
                     maxClientCnxns=0
                     initLimit=30
                     syncLimit=4
+                    4lw.commands.whitelist=*
                     # Use provided DNS
                     server.1=${zk1_ip}:2888:3888
                     server.2=${zk2_ip}:2888:3888
@@ -505,12 +506,6 @@ Resources:
                       Fn::ImportValue: Zookeeper3IP
                     zk4_ip:
                       Fn::ImportValue: Zookeeper4IP
-              group: ec2-user
-              mode: '000644'
-              owner: ec2-user
-            /data/zookeeper/myid:
-              content: |
-                    3
               group: ec2-user
               mode: '000644'
               owner: ec2-user
@@ -549,6 +544,11 @@ Resources:
 
                 # Persist the volume in /etc/fstab so it gets mounted again
                 echo '/dev/xvdf /data/zookeeper xfs defaults 0 0' >> /etc/fstab
+
+                # Create ID file for ZooKeeper
+                echo '3' > /data/zookeeper/myid
+                chmod 0644 /data/zookeeper/myid
+                chown ec2-user:ec2-user /data/zookeeper/myid
               group: root
               mode: '000755'
               owner: root
@@ -669,12 +669,13 @@ Resources:
                     maxClientCnxns=0
                     initLimit=30
                     syncLimit=4
+                    4lw.commands.whitelist=*
                     # Use provided DNS
                     server.1=${zk1_ip}:2888:3888
                     server.2=${zk2_ip}:2888:3888
                     server.3=${zk3_ip}:2888:3888
                     server.4=${zk4_ip}:2888:3888:observer
-                    peerType=}:2888:3888:observer
+                    peerType=observer
                   - zk1_ip:
                       Fn::ImportValue: Zookeeper1IP
                     zk2_ip:
@@ -683,12 +684,6 @@ Resources:
                       Fn::ImportValue: Zookeeper3IP
                     zk4_ip:
                       Fn::ImportValue: Zookeeper4IP
-              group: ec2-user
-              mode: '000644'
-              owner: ec2-user
-            /data/zookeeper/myid:
-              content: |
-                    4
               group: ec2-user
               mode: '000644'
               owner: ec2-user
@@ -727,6 +722,11 @@ Resources:
 
                 # Persist the volume in /etc/fstab so it gets mounted again
                 echo '/dev/xvdf /data/zookeeper xfs defaults 0 0' >> /etc/fstab
+
+                # Create ID file for ZooKeeper
+                echo '4' > /data/zookeeper/myid
+                chmod 0644 /data/zookeeper/myid
+                chown ec2-user:ec2-user /data/zookeeper/myid
               group: root
               mode: '000755'
               owner: root

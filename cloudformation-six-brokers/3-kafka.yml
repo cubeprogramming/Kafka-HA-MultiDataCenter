@@ -470,13 +470,15 @@ Resources:
                     auto.create.topics.enable=false
                     offsets.topic.replication.factor=6
                   - broker_ip:
-                      Fn::ImportValue: Kafka2IP
+                      Fn::ImportValue: Kafka1IP
                     zookeeper1_ip:
                       Fn::ImportValue: Zookeeper1IP
                     zookeeper2_ip:
                       Fn::ImportValue: Zookeeper2IP
                     zookeeper3_ip:
                       Fn::ImportValue: Zookeeper3IP
+                    zookeeper4_ip:
+                      Fn::ImportValue: Zookeeper4IP
               group: ec2-user
               mode: '000644'
               owner: ec2-user
@@ -709,13 +711,15 @@ Resources:
                     auto.create.topics.enable=false
                     offsets.topic.replication.factor=6
                   - broker_ip:
-                      Fn::ImportValue: Kafka3IP
+                      Fn::ImportValue: Kafka1IP
                     zookeeper1_ip:
                       Fn::ImportValue: Zookeeper1IP
                     zookeeper2_ip:
                       Fn::ImportValue: Zookeeper2IP
                     zookeeper3_ip:
                       Fn::ImportValue: Zookeeper3IP
+                    zookeeper4_ip:
+                      Fn::ImportValue: Zookeeper4IP
               group: ec2-user
               mode: '000644'
               owner: ec2-user
@@ -948,13 +952,15 @@ Resources:
                     auto.create.topics.enable=false
                     offsets.topic.replication.factor=6
                   - broker_ip:
-                      Fn::ImportValue: Kafka4IP
+                      Fn::ImportValue: Kafka1IP
                     zookeeper1_ip:
                       Fn::ImportValue: Zookeeper1IP
                     zookeeper2_ip:
                       Fn::ImportValue: Zookeeper2IP
                     zookeeper3_ip:
                       Fn::ImportValue: Zookeeper3IP
+                    zookeeper4_ip:
+                      Fn::ImportValue: Zookeeper4IP
               group: ec2-user
               mode: '000644'
               owner: ec2-user
@@ -1187,13 +1193,15 @@ Resources:
                     auto.create.topics.enable=false
                     offsets.topic.replication.factor=6
                   - broker_ip:
-                      Fn::ImportValue: Kafka5IP
+                      Fn::ImportValue: Kafka1IP
                     zookeeper1_ip:
                       Fn::ImportValue: Zookeeper1IP
                     zookeeper2_ip:
                       Fn::ImportValue: Zookeeper2IP
                     zookeeper3_ip:
                       Fn::ImportValue: Zookeeper3IP
+                    zookeeper4_ip:
+                      Fn::ImportValue: Zookeeper4IP
               group: ec2-user
               mode: '000644'
               owner: ec2-user
@@ -1426,13 +1434,15 @@ Resources:
                     auto.create.topics.enable=false
                     offsets.topic.replication.factor=6
                   - broker_ip:
-                      Fn::ImportValue: Kafka6IP
+                      Fn::ImportValue: Kafka1IP
                     zookeeper1_ip:
                       Fn::ImportValue: Zookeeper1IP
                     zookeeper2_ip:
                       Fn::ImportValue: Zookeeper2IP
                     zookeeper3_ip:
                       Fn::ImportValue: Zookeeper3IP
+                    zookeeper4_ip:
+                      Fn::ImportValue: Zookeeper4IP
               group: ec2-user
               mode: '000644'
               owner: ec2-user
